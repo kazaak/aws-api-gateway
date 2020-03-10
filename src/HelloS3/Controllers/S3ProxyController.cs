@@ -80,8 +80,21 @@ namespace HelloS3.Controllers
                 // sort by last modified date, ascending
                 keysInBucketList.Sort((left, right) =>
                 {
-                    return creationDates[left] < creationDates[right] ? -1 :
-                           (creationDates[left] > creationDates[right] ? 1 : 0);
+                    // n.b. - sometimes we don't have a creation date for one or the other, weird,
+                    //  too late to debug.
+                    if (creationDates.ContainsKey(left) && creationDates.ContainsKey(right))
+                    {
+                        return creationDates[left] < creationDates[right] ? -1 :
+                               (creationDates[left] > creationDates[right] ? 1 : 0);
+                    }
+                    else if (!creationDates.ContainsKey(left))
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
                 });
 
                 List<string> results = new List<string>();

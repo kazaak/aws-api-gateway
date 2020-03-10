@@ -25,6 +25,15 @@ namespace HelloS3
         // This method gets called by the runtime. Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(o => o.AddPolicy("_cors", builder =>
+            {
+                builder
+                    .AllowAnyOrigin() // Can specify origin with .WithOrigins()
+                    .AllowCredentials()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Add S3 to the ASP.NET Core dependency injection framework.
@@ -42,6 +51,8 @@ namespace HelloS3
             {
                 app.UseHsts();
             }
+
+            app.UseCors("_cors");
 
             app.UseHttpsRedirection();
             app.UseMvc();
